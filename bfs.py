@@ -1,5 +1,7 @@
 # Best First Search
 from queue import PriorityQueue
+import time
+import timeit
 
 
 class Maze:
@@ -9,13 +11,18 @@ class Maze:
         self.cols = len(maze[0])
         self.solution = [[' ' for _ in range(self.cols)]
                          for _ in range(self.rows)]
+        self.step_count = 0
 
     def solve(self):
-        start = (0, 0)
-        end = (self.rows - 1, self.cols - 1)
+        start = (1, 1)
+        end = (self.rows - 2, self.cols - 2)
 
+        start_time = time.time()
         if self._best_first_search(start, end):
+            end_time = time.time()
             self._print_solution()
+            print("Langkah yang dibutuhkan:", self.step_count)
+            # print("Waktu yang dibutuhkan:", end_time - start_time, "detik")
         else:
             print("Tidak ada solusi yang ditemukan.")
 
@@ -41,6 +48,7 @@ class Maze:
                     queue.put((priority, neighbor))
                     visited.add(neighbor)
                     self.solution[neighbor_row][neighbor_col] = '*'
+                    self.step_count += 1
 
         return False
 
@@ -71,8 +79,8 @@ class Maze:
                 elif self.solution[row][col] != '*':
                     self.solution[row][col] = ' '
 
-        self.solution[0][0] = 'S'
-        self.solution[self.rows - 1][self.cols - 1] = 'E'
+        self.solution[1][1] = 'S'
+        self.solution[self.rows - 2][self.cols - 2] = 'E'
 
     def _print_solution(self):
         for row in self.solution:
@@ -116,7 +124,10 @@ def main():
         return
 
     maze_solver = Maze(maze)
-    maze_solver.solve()
+
+    execution_time = timeit.timeit(maze_solver.solve, number=1)
+    # maze_solver.solve()
+    print("Waktu yang dibutuhkan:", execution_time, "detik")
 
 
 if __name__ == '__main__':

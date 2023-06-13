@@ -1,4 +1,9 @@
 # Backtracking
+import timeit
+
+import time
+
+
 class Maze:
     def __init__(self, maze):
         self.maze = maze
@@ -6,12 +11,18 @@ class Maze:
         self.cols = len(maze[0])
         self.solution_backtracking = [
             [' ' for _ in range(self.cols)] for _ in range(self.rows)]
+        self.step_count = 0
 
     def solve_backtracking(self):
         start = (1, 1)
         end = (self.rows - 2, self.cols - 2)
+
+        # start_time = time.time()
         if self._backtrack(start, end, self.solution_backtracking):
+            # end_time = time.time()
             self._print_solution(self.solution_backtracking)
+            print("Langkah yang dibutuhkan:", self.step_count)
+            # print("Waktu yang dibutuhkan:", end_time - start_time, "detik")
         else:
             print("Tidak ada solusi Backtracking yang ditemukan.")
 
@@ -24,14 +35,22 @@ class Maze:
 
         if self._is_valid_move(current_row, current_col):
             solution[current_row][current_col] = '0'
-
-            if self._backtrack((current_row + 1, current_col), end, solution):
-                return True
+            self.step_count += 1
 
             if self._backtrack((current_row, current_col + 1), end, solution):
                 return True
 
+            if self._backtrack((current_row + 1, current_col), end, solution):
+                return True
+
+            if self._backtrack((current_row - 1, current_col), end, solution):
+                return True
+
+            if self._backtrack((current_row, current_col - 1), end, solution):
+                return True
+
             solution[current_row][current_col] = ' '
+            self.step_count -= 1
 
         return False
 
@@ -96,7 +115,12 @@ def main():
 
     maze_solver = Maze(maze)
     print("Solusi Backtracking:")
-    maze_solver.solve_backtracking()
+
+    execution_time = timeit.timeit(maze_solver.solve_backtracking, number=1)
+
+    # maze_solver.solve_backtracking()
+
+    print("Waktu yang dibutuhkan:", execution_time, "detik")
 
 
 if __name__ == '__main__':
