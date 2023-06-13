@@ -1,7 +1,4 @@
-# Backtracking
 import timeit
-
-import time
 
 
 class Maze:
@@ -9,47 +6,56 @@ class Maze:
         self.maze = maze
         self.rows = len(maze)
         self.cols = len(maze[0])
-        self.solution_backtracking = [
-            [' ' for _ in range(self.cols)] for _ in range(self.rows)]
+        self.best_solution = None
         self.step_count = 0
 
     def solve_backtracking(self):
         start = (1, 1)
         end = (self.rows - 2, self.cols - 2)
 
-        # start_time = time.time()
-        if self._backtrack(start, end, self.solution_backtracking):
-            # end_time = time.time()
-            self._print_solution(self.solution_backtracking)
+        if self._backtrack(start, end, []):
+            self._build_best_solution()
+            self._print_solution(self.best_solution)
             print("Langkah yang dibutuhkan:", self.step_count)
-            # print("Waktu yang dibutuhkan:", end_time - start_time, "detik")
         else:
             print("Tidak ada solusi Backtracking yang ditemukan.")
 
     def _backtrack(self, current, end, solution):
-        current_row, current_col = current
-
         if current == end:
-            self._build_solution(solution)
+            self.solution = solution
             return True
 
+        current_row, current_col = current
+
         if self._is_valid_move(current_row, current_col):
-            solution[current_row][current_col] = '0'
+            solution.append(current)
             self.step_count += 1
 
-            if self._backtrack((current_row, current_col + 1), end, solution):
-                return True
+            # Check right
+            next_position = (current_row, current_col + 1)
+            if next_position not in solution:
+                if self._backtrack(next_position, end, solution):
+                    return True
 
-            if self._backtrack((current_row + 1, current_col), end, solution):
-                return True
+            # Check down
+            next_position = (current_row + 1, current_col)
+            if next_position not in solution:
+                if self._backtrack(next_position, end, solution):
+                    return True
 
-            if self._backtrack((current_row - 1, current_col), end, solution):
-                return True
+            # Check up
+            next_position = (current_row - 1, current_col)
+            if next_position not in solution:
+                if self._backtrack(next_position, end, solution):
+                    return True
 
-            if self._backtrack((current_row, current_col - 1), end, solution):
-                return True
+            # Check left
+            next_position = (current_row, current_col - 1)
+            if next_position not in solution:
+                if self._backtrack(next_position, end, solution):
+                    return True
 
-            solution[current_row][current_col] = ' '
+            solution.pop()
             self.step_count -= 1
 
         return False
@@ -61,20 +67,21 @@ class Maze:
             return False
         return True
 
-    def _build_solution(self, solution):
-        for row in range(self.rows):
-            for col in range(self.cols):
-                if self.maze[row][col] == '#':
-                    solution[row][col] = '#'
-                elif solution[row][col] != '0':
-                    solution[row][col] = ' '
-
-        solution[1][1] = 'S'
-        solution[self.rows - 2][self.cols - 2] = 'E'
+    def _build_best_solution(self):
+        self.best_solution = [[' ' for _ in range(self.cols)] for _ in range(self.rows)]
+        for row, col in self.solution:
+            self.best_solution[row][col] = '0'
+        self.best_solution[1][1] = 'S'
+        self.best_solution[self.rows - 2][self.cols - 2] = 'E'
 
     def _print_solution(self, solution):
-        for row in solution:
-            print(' '.join(row))
+        for i, row in enumerate(self.maze):
+            for j, cell in enumerate(row):
+                if cell == '#':
+                    print('#', end=' ')
+                else:
+                    print(solution[i][j], end=' ')
+            print()
 
 
 def read_maze_from_file(filename):
@@ -117,8 +124,6 @@ def main():
     print("Solusi Backtracking:")
 
     execution_time = timeit.timeit(maze_solver.solve_backtracking, number=1)
-
-    # maze_solver.solve_backtracking()
 
     print("Waktu yang dibutuhkan:", execution_time, "detik")
 
