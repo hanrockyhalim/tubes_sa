@@ -134,10 +134,3 @@ if __name__ == '__main__':
     main()
 
 
-# Dalam kode di atas, program memberikan pilihan kepada pengguna untuk memasukkan labirin melalui keyboard atau membaca labirin dari file teks. Pengguna dapat memilih opsi yang diinginkan dengan memasukkan angka pilihan.
-# - Jika pengguna memilih opsi 1, program akan meminta pengguna untuk memasukkan labirin baris per baris melalui keyboard.
-# - Jika pengguna memilih opsi 2, program akan meminta pengguna untuk memasukkan path file teks yang berisi labirin.
-
-# Setelah labirin diperoleh dari masukan pengguna, program akan memanggil metode `solve()` untuk menyelesaikan labirin menggunakan algoritma Best-First Search. Hasil solusi akan dicetak ke layar.
-
-# Pastikan labirin yang dimasukkan sesuai dengan format yang diharapkan (misalnya, '#' untuk tembok, ' ' untuk jalur kosong, 'S' untuk titik awal, dan 'E' untuk titik akhir).

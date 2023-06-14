@@ -1,6 +1,5 @@
 import timeit
 
-
 class Maze:
     def __init__(self, maze):
         self.maze = maze
@@ -55,8 +54,8 @@ class Maze:
                 if self._backtrack(next_position, end, solution):
                     return True
 
-            solution.pop()
-            self.step_count -= 1
+            # solution.pop()
+            # self.step_count -= 1
 
         return False
 
